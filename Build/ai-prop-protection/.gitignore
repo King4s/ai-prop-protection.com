@@ -1,0 +1,4 @@
+﻿# Backup files and temporary directories
+*.zip
+_backups/
+_temp_icons/
