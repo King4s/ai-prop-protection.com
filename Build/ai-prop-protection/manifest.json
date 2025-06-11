@@ -1,7 +1,7 @@
 ﻿{
     "manifest_version": 3,
     "name": "AI-Prop-Protection",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Detects propaganda sources and topics in AI chatbot responses.",
     "homepage_url": "https://github.com/King4s/ai-prop-protection.com",
     "author": "King4s",
