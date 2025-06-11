@@ -1,4 +1,5 @@
-﻿# Backup files and temporary directories
-*.zip
+﻿# Build artifacts and backups
 _backups/
 _temp_icons/
+# Ignore the build script itself
+Build-AIPP.ps1
