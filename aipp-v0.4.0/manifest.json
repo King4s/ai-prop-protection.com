@@ -1,0 +1,33 @@
+{
+    "manifest_version": 3,
+    "name": "AI-Prop-Protection",
+    "version": "0.7.7",
+    "description": "An open-source browser extension that detects propaganda sources and topics in AI chatbot responses.",
+    "homepage_url": "https://github.com/King4s/ai-prop-protection.com",
+    "author": "King4s",
+    "permissions": [ "storage", "activeTab", "scripting" ],
+    "background": { "service_worker": "background.js" },
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": { "16": "icons/icon16.png", "48": "icons/icon48.png", "128": "icons/icon128.png" }
+    },
+    "icons": { "16": "icons/icon16.png", "48": "icons/icon48.png", "128": "icons/icon128.png" },
+    "host_permissions": [
+        "*://*.openai.com/*", "*://chatgpt.com/*", "*://gemini.google.com/*", "*://aistudio.google.com/*",
+        "*://copilot.microsoft.com/*", "*://*.bing.com/*", "*://claude.ai/*", "*://perplexity.ai/*",
+        "*://*.deepseek.com/*", "*://meta.ai/*"
+    ],
+    "web_accessible_resources": [
+        { "resources": ["domains.json", "keywords.json"], "matches": ["<all_urls>"] }
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "*://*.openai.com/*", "*://chatgpt.com/*", "*://gemini.google.com/*", "*://aistudio.google.com/*",
+                "*://copilot.microsoft.com/*", "*://*.bing.com/search*", "*://claude.ai/*", "*://perplexity.ai/*",
+                "*://chat.deepseek.com/*", "*://meta.ai/*"
+            ],
+            "js": ["content.js"]
+        }
+    ]
+}

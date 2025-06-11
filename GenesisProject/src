@@ -1,0 +1,51 @@
+﻿# --- Project Build Script for {{PROJECT_NAME}} ---
+# This script manages the build, versioning, and backup process for THIS project.
+[CmdletBinding()]
+param ([Switch]$Release)
+
+# Configuration
+$ProjectName = $PSScriptRoot.Split('\')[-1]
+$BackupDirPath = Join-Path $PSScriptRoot "_backups"
+$ManifestPath = Join-Path $PSScriptRoot "manifest.json" # Example for extensions
+$NewVersion = "1.0.0"
+
+# Versioning Logic
+# Tries to read the version from a manifest.json, if it exists.
+if (Test-Path $ManifestPath) {
+    try {
+        $OldVersion = (Get-Content $ManifestPath | ConvertFrom-Json).version
+        $VersionParts = $OldVersion.Split('.')
+        $VersionParts[-1] = ([int]$VersionParts[-1] + 1).ToString()
+        $NewVersion = $VersionParts -join '.'
+    } catch {
+        # If manifest is broken or version is missing, start from 1.0.0
+        $OldVersion = "1.0.0"
+    }
+} else {
+    $OldVersion = "1.0.0"
+}
+
+# ZIP Backup
+# Always creates a versioned ZIP file of the current state before making changes.
+if (-not (Test-Path $BackupDirPath)) { New-Item -Path $BackupDirPath -ItemType Directory | Out-Null }
+$ZipFileName = "${ProjectName}_v${OldVersion}.zip"
+$ZipFullPath = Join-Path $BackupDirPath $ZipFileName
+$itemsToArchive = Get-ChildItem -Path $PSScriptRoot -Exclude "_backups"
+Compress-Archive -Path $itemsToArchive.FullName -DestinationPath $ZipFullPath -Force
+Write-Host "Backup of v$($OldVersion) created at `_backups\$($ZipFileName)" -ForegroundColor Green
+
+# Update Manifest
+# If a manifest exists, this will update its version number.
+if (Test-Path $ManifestPath) {
+    $manifest = Get-Content $ManifestPath -Raw | ConvertFrom-Json
+    $manifest.version = $NewVersion
+    $manifest | ConvertTo-Json -Depth 5 | Set-Content $ManifestPath -Encoding UTF8
+    Write-Host "manifest.json updated to v$($NewVersion)." -ForegroundColor Cyan
+}
+
+# Future Git Release Logic
+if ($Release) {
+    Write-Host "Release functionality is not yet implemented. This would be the place to add 'git' and 'gh' commands." -ForegroundColor Yellow
+}
+
+Write-Host "Build process complete for v$($NewVersion)." -ForegroundColor Green

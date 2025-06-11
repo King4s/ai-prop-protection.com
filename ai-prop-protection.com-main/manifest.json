@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "AI-Prop-Protection",
+  "version": "0.1.1",
+  "description": "An open-source browser extension that helps users detect propaganda in AI chatbot responses.",
+  "homepage_url": "https://github.com/King4s/ai-prop-protection.com",
+  "author": "King4s",
+  "permissions": ["storage"],
+  "host_permissions": ["*://*.openai.com/*"],
+  "web_accessible_resources": [
+    {
+      "resources": ["domains.json"],
+      "matches": ["*://*.openai.com/*"]
+    }
+  ],
+  "content_scripts": [
+    {
+      "matches": ["*://chat.openai.com/*"],
+      "js": ["content.js"]
+    }
+  ]
+}
