@@ -1,8 +1,6 @@
-﻿# Build artifacts and backups
-*.zip
+﻿*.zip
 _build_backups/
 _temp_icons/
 _releases/
-
-# PowerShell scripts
-*.ps1
+Build-AIPP.ps1
+Publish-AIPP.ps1

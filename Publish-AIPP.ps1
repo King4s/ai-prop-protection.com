@@ -1,7 +1,6 @@
 # --- AI-Prop-Protection PowerShell Release Publisher ---
-# Version: 1.0
+# Version: 1.2 (Clean Output)
 # Purpose: Commits, tags, and creates a new release on GitHub from the existing project build.
-# IMPORTANT: This script should be run AFTER testing the build from Build-AIPP.ps1.
 
 # --- Configuration ---
 $ProjectParentPath = $PSScriptRoot
@@ -18,10 +17,8 @@ Write-Host ""
 
 # --- Phase 1: Prerequisite & Project Check ---
 if (-not (Test-Path $ProjectPath)) { Write-Host "[FATAL ERROR] Project folder '$ProjectName' not found. Please run the build script first." -ForegroundColor Red; return }
-$gitExists = Get-Command git -ErrorAction SilentlyContinue
-$ghExists = Get-Command gh -ErrorAction SilentlyContinue
-if (-not $gitExists) { Write-Host "[FATAL ERROR] Git not found." -ForegroundColor Red; return }
-if (-not $ghExists) { Write-Host "[FATAL ERROR] GitHub CLI (gh) not found." -ForegroundColor Red; return }
+$gitExists = Get-Command git -ErrorAction SilentlyContinue; if (-not $gitExists) { Write-Host "[FATAL ERROR] Git not found." -ForegroundColor Red; return }
+$ghExists = Get-Command gh -ErrorAction SilentlyContinue; if (-not $ghExists) { Write-Host "[FATAL ERROR] GitHub CLI (gh) not found." -ForegroundColor Red; return }
 if (-not (Test-Path (Join-Path $ProjectParentPath ".git"))) { Write-Host "[FATAL ERROR] This script must be run from inside a cloned Git repository." -ForegroundColor Red; return }
 
 # --- Phase 2: Get Version and Release Notes ---
@@ -30,7 +27,9 @@ $Version = $Manifest.version
 Write-Host "Preparing to release version: v$Version" -ForegroundColor Cyan
 
 $commitMessage = Read-Host "-> Enter a short commit message (e.g., 'Release v$Version')"
+if (-not $commitMessage) { $commitMessage = "Release v${Version}" }
 $releaseNotes = Read-Host "-> Enter release notes (a short description of what's new)"
+if (-not $releaseNotes) { $releaseNotes = "No release notes provided." }
 
 # --- Phase 3: Create ZIP Archive for Release ---
 if (-not (Test-Path $ReleaseZipPath)) { New-Item $ReleaseZipPath -ItemType Directory -Force | Out-Null }
@@ -60,7 +59,7 @@ Write-Host "     RELEASE COMPLETE"
 Write-Host "====================================================" -ForegroundColor Green
 Write-Host ""
 $repoUrl = git remote get-url origin
-if ($repoUrl -and $repoUrl.StartsWith("https:")) {
+if ($repoUrl -and $repoUrl.StartsWith("https")) {
     $releaseUrl = $repoUrl.Replace(".git", "/releases/tag/v$Version")
     Write-Host "You can view the new release at: $releaseUrl" -ForegroundColor Yellow
 }
