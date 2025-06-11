@@ -1,5 +1,5 @@
 # --- AI-Prop-Protection PowerShell Release Publisher ---
-# Version: 1.1 (Syntax-Corrected)
+# Version: 1.2 (Clean Output)
 # Purpose: Commits, tags, and creates a new release on GitHub from the existing project build.
 
 # --- Configuration ---

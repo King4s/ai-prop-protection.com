@@ -1,5 +1,8 @@
 ﻿# Build artifacts and backups
-_backups/
+*.zip
+_build_backups/
 _temp_icons/
-# Ignore the build script itself
-Build-AIPP.ps1
+_releases/
+
+# PowerShell scripts
+*.ps1
